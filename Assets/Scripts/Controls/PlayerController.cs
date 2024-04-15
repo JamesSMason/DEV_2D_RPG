@@ -35,6 +35,16 @@ namespace JSM.RPG.Controls
             Move();
         }
 
+        private void OnCollisionEnter2D(Collision2D collision)
+        {
+            Debug.Log("Ouch");
+        }
+
+        private void OnCollisionExit2D(Collision2D collision)
+        {
+            Debug.Log("Ok I get it");
+        }
+
         private void OnDisable()
         {
             _playerControls.Disable();
