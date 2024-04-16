@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8166584056e183449a30e739d73b1fcc, type: 3}
+  m_Name: GoblinBoss
+  m_EditorClassIdentifier: 
+  Name: Goblin Boss
+  Strength: 10
+  Dexterity: 14
+  Constitution: 10
+  Intelligence: 10
+  Wisdom: 8
+  Charisma: 10
+  ArmorClass: 17
+  MaxHP: 21
+  DamageDieType: 6
+  NumberOfDamageDice: 1
+  XPValue: 200
+  ProficiencyBonus: 2
+  NumberOfAttacks: 2
+  Visuals: {fileID: 0}

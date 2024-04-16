@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef435d95e942e204d8b68082a5afe110, type: 3}
+  m_Name: James
+  m_EditorClassIdentifier: 
+  MemberName: James
+  Level: 1
+  Strength: 15
+  Dexterity: 11
+  Constitution: 14
+  Intelligence: 8
+  Wisdom: 9
+  Charisma: 11
+  ArmorClass: 12
+  MaxHP: 12
+  DamageDieType: 1
+  NumberOfDamageDice: 6
+  XPValue: 0
+  ProficiencyBonus: 2
+  NumberOfAttacks: 1
+  Visuals: {fileID: 3652770488642877670, guid: 9dac9d55d1aa5d74ea7ae27792423ce5, type: 3}
