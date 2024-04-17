@@ -1,16 +1,26 @@
-using System;
+using CustomizableCharacters;
 using UnityEngine;
+using UnityEngine.Windows;
 
 namespace JSM.RPG.Controls
 {
     public class PlayerController : MonoBehaviour
     {
-        [SerializeField] private float _moveSpeed = 1.0f;
+        [SerializeField] private float _moveSpeed = 4.0f;
+
+        [Header("References")]
+        [SerializeField] private CustomizableCharacter _customizableCharacter;
+        [SerializeField] private Animator _animator;
 
         private PlayerControls _playerControls = null;
         private Rigidbody2D _rb = null;
 
         private Vector2 _movement = Vector2.zero;
+        private Vector2 _previousDirection;
+        private GameObject _currentDirectionGameObject;
+        private int _animatorDirection;
+
+        private readonly Vector2[] _directions = { Vector2.right, Vector2.left, Vector2.up, Vector2.down };
 
         #region Unity Messages
 
@@ -25,6 +35,12 @@ namespace JSM.RPG.Controls
             _playerControls.Enable();
         }
 
+        private void Start()
+        {
+            ResetRigs();
+            HandleDirection();
+        }
+
         private void Update()
         {
             PlayerInput();
@@ -33,16 +49,6 @@ namespace JSM.RPG.Controls
         private void FixedUpdate()
         {
             Move();
-        }
-
-        private void OnCollisionEnter2D(Collision2D collision)
-        {
-            Debug.Log("Ouch");
-        }
-
-        private void OnCollisionExit2D(Collision2D collision)
-        {
-            Debug.Log("Ok I get it");
         }
 
         private void OnDisable()
@@ -54,6 +60,13 @@ namespace JSM.RPG.Controls
 
         #region Private
 
+        private void ResetRigs()
+        {
+            _customizableCharacter.UpRig.SetActive(false);
+            _customizableCharacter.SideRig.SetActive(false);
+            _customizableCharacter.DownRig.SetActive(false);
+        }
+
         private void PlayerInput()
         {
             _movement = _playerControls.Movement.Move.ReadValue<Vector2>().normalized;
@@ -61,9 +74,76 @@ namespace JSM.RPG.Controls
 
         private void Move()
         {
+            _animator.SetFloat("Direction", _animatorDirection);
+
+            if (_movement == Vector2.zero)
+            {
+                _animator.SetFloat("Speed", 0);
+                return;
+            }
+
+            _animator.SetFloat("Speed", 1);
             Vector3 movement = _movement * _moveSpeed * Time.fixedDeltaTime;
             Vector3 newPosition = transform.position + movement;
             _rb.MovePosition(newPosition);
+            HandleDirection();
+        }
+
+        private void HandleDirection()
+        {
+            var direction = GetClosestDirection(_movement);
+            if (direction == _previousDirection)
+                return;
+
+            _currentDirectionGameObject?.SetActive(false);
+
+            if (direction == Vector2.right)
+            {
+                _currentDirectionGameObject = _customizableCharacter.SideRig;
+                var scale = _customizableCharacter.SideRig.transform.localScale;
+                scale.x = Mathf.Abs(scale.x);
+                _currentDirectionGameObject.transform.localScale = scale;
+                _animatorDirection = 1;
+            }
+            else if (direction == Vector2.left)
+            {
+                _currentDirectionGameObject = _customizableCharacter.SideRig;
+                var scale = _customizableCharacter.SideRig.transform.localScale;
+                scale.x = Mathf.Abs(scale.x) * -1;
+                _currentDirectionGameObject.transform.localScale = scale;
+                _animatorDirection = 1;
+            }
+            else if (direction == Vector2.up)
+            {
+                _currentDirectionGameObject = _customizableCharacter.UpRig;
+                _animatorDirection = 0;
+            }
+            else if (direction == Vector2.down)
+            {
+                _currentDirectionGameObject = _customizableCharacter.DownRig;
+                _animatorDirection = 2;
+            }
+
+            _currentDirectionGameObject?.SetActive(true);
+            _previousDirection = direction;
+        }
+
+        private Vector2 GetClosestDirection(Vector2 from)
+        {
+            var maxDot = -Mathf.Infinity;
+            var ret = Vector3.zero;
+
+            for (int i = 0; i < _directions.Length; i++)
+            {
+                var t = Vector3.Dot(from, _directions[i]);
+                if (t > maxDot)
+                {
+                    ret = _directions[i];
+                    maxDot = t;
+                }
+            }
+
+            return ret;
         }
 
         #endregion

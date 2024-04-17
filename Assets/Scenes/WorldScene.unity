@@ -964,8 +964,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2512421e59bcd104494e9069fa095155, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _encounterTimer: 500
-  _chanceOfEncounter: 10
+  _encounterTimer: 20
+  _chanceOfEncounter: 5
 --- !u!1001 &1228045660
 PrefabInstance:
   m_ObjectHideFlags: 0
