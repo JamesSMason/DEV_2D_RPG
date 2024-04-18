@@ -1,6 +1,4 @@
-using JSM.RPG.Combat;
 using JSM.RPG.Player;
-using JSM.Utilities;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,11 +7,13 @@ namespace JSM.RPG.Party
 {
     public class PartyHandler : MonoBehaviour
     {
-        public PartyHandler Instance { get; private set; } = null;
+        public static PartyHandler Instance { get; private set; } = null;
 
         [SerializeField] private PlayerStats _defaultPartyMember = null;
         [SerializeField] private PlayerStats[] _allMembers;
         [SerializeField] private List<PlayerStats> _currentParty = new List<PlayerStats>();
+
+        public List<PlayerStats> CurrentParty => _currentParty;
 
         #region Unity Messages
 

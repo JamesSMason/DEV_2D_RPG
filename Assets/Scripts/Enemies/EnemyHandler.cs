@@ -7,14 +7,30 @@ namespace JSM.RPG.Enemies
 {
     public class EnemyHandler : MonoBehaviour
     {
+        public static EnemyHandler Instance { get; private set; } = null;
+
+        [SerializeField] private EnemyInfo _defaultEnemy = null;
         [SerializeField] private EnemyInfo[] _allEnemies = null;
         [SerializeField] private List<Enemy> _currentEnemies = new List<Enemy>();
+
+        public List<Enemy> CurrentEnemies => _currentEnemies;
 
         #region Unity Messages
 
         private void Awake()
         {
-            GenerateEnemyByName("Goblin");
+            if (Instance != null)
+            {
+                Destroy(this.gameObject);
+            }
+            else
+            {
+                Instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
+            GenerateEnemyByName(_defaultEnemy.EnemyName);
+            GenerateEnemyByName(_defaultEnemy.EnemyName);
+            GenerateEnemyByName(_defaultEnemy.EnemyName);
         }
 
         #endregion
@@ -52,20 +68,20 @@ namespace JSM.RPG.Enemies
         public int XPValue;
         public CombatVisuals Visuals;
 
-        public Enemy(EnemyInfo enemyInfo)
+        public Enemy(EnemyInfo enemy)
         {
-            EnemyName = enemyInfo.EnemyName;
-            InitiativeBonus = enemyInfo.InitiativeBonus;
-            ArmorClass = enemyInfo.ArmorClass;
-            MaxHP = enemyInfo.MaxHP;
-            CurrentHP = enemyInfo.MaxHP;
-            HitBonus = enemyInfo.HitBonus;
-            NumberOfAttacks = enemyInfo.NumberOfAttacks;
-            NumberOfDamageDice = enemyInfo.NumberOfDamageDice;
-            DamageDieType = enemyInfo.DamageDieType;
-            DamageBonus = enemyInfo.DamageBonus;
-            XPValue = enemyInfo.XPValue;
-            Visuals = enemyInfo.Visuals;
+            EnemyName = enemy.EnemyName;
+            InitiativeBonus = enemy.InitiativeBonus;
+            ArmorClass = enemy.ArmorClass;
+            MaxHP = enemy.MaxHP;
+            CurrentHP = enemy.MaxHP;
+            HitBonus = enemy.HitBonus;
+            NumberOfAttacks = enemy.NumberOfAttacks;
+            NumberOfDamageDice = enemy.NumberOfDamageDice;
+            DamageDieType = enemy.DamageDieType;
+            DamageBonus = enemy.DamageBonus;
+            XPValue = enemy.XPValue;
+            Visuals = enemy.Visuals;
         }
     }
 }

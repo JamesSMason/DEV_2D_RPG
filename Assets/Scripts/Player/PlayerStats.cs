@@ -35,11 +35,6 @@ namespace JSM.RPG.Player
             _currentHP = _maxHP;
         }
 
-        private void Start()
-        {
-            ChangeHealth(0);
-        }
-
         public void ChangeHealth(int health)
         {
             _currentHP = health;
