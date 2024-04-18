@@ -16036,6 +16036,7 @@ GameObject:
   - component: {fileID: 2485560870871992693}
   - component: {fileID: 4350812075453725665}
   - component: {fileID: 1069231720435899281}
+  - component: {fileID: 1589515397757804250}
   m_Layer: 0
   m_Name: Goblin
   m_TagString: Untagged
@@ -16302,6 +16303,19 @@ SortingGroup:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_SortAtRoot: 0
+--- !u!114 &1589515397757804250
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4808692754261161117}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50e52c9820af8d2449c46047ec78903f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animator: {fileID: 4350812075453725665}
 --- !u!1 &4875049374509705828
 GameObject:
   m_ObjectHideFlags: 0
@@ -18189,6 +18203,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 966233987589202497}
+  - component: {fileID: -6544042945269142601}
   m_Layer: 0
   m_Name: GoblinBattleVisual
   m_TagString: Untagged
@@ -18210,8 +18225,21 @@ Transform:
   m_Children:
   - {fileID: 7456963706309018341}
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-6544042945269142601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5442049432129949583}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50e52c9820af8d2449c46047ec78903f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animator: {fileID: 4350812075453725665}
 --- !u!1 &5462607056471893783
 GameObject:
   m_ObjectHideFlags: 0

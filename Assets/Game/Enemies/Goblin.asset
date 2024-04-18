@@ -13,17 +13,13 @@ MonoBehaviour:
   m_Name: Goblin
   m_EditorClassIdentifier: 
   EnemyName: Goblin
-  Strength: 8
-  Dexterity: 14
-  Constitution: 10
-  Intelligence: 10
-  Wisdom: 8
-  Charisma: 8
+  InitiativeBonus: 2
   ArmorClass: 15
   MaxHP: 7
-  DamageDieType: 6
-  NumberOfDamageDice: 1
-  XPValue: 50
-  ProficiencyBonus: 2
+  HitBonus: 4
   NumberOfAttacks: 1
-  Visuals: {fileID: 8396717689696820510, guid: e6c5c29b825e41a409aba7aae2e30942, type: 3}
+  NumberOfDamageDice: 1
+  DamageDieType: 6
+  DamageBonus: 2
+  XPValue: 50
+  Visuals: {fileID: 5442049432129949583, guid: 90570e9cada42ef4c9d62dd03f48993d, type: 3}

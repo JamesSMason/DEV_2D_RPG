@@ -1,3 +1,4 @@
+using JSM.RPG.Combat;
 using UnityEngine;
 
 namespace JSM.RPG.Enemies
@@ -6,19 +7,15 @@ namespace JSM.RPG.Enemies
     public class EnemyInfo : ScriptableObject
     {
         public string EnemyName;
-        public int Strength;
-        public int Dexterity;
-        public int Constitution;
-        public int Intelligence;
-        public int Wisdom;
-        public int Charisma;
+        public int InitiativeBonus;
         public int ArmorClass;
         public int MaxHP;
-        public int DamageDieType;
-        public int NumberOfDamageDice;
-        public int XPValue;
-        public int ProficiencyBonus;
+        public int HitBonus;
         public int NumberOfAttacks;
-        public GameObject Visuals;
+        public int NumberOfDamageDice;
+        public int DamageDieType;
+        public int DamageBonus;
+        public int XPValue;
+        public CombatVisuals Visuals;
     }
 }

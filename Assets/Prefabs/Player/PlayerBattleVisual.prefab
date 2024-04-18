@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1091164181962647652}
   - component: {fileID: 5754032508036190936}
   m_Layer: 0
-  m_Name: BattlePlayer
+  m_Name: PlayerBattleVisual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -143,10 +143,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Visuals
       objectReference: {fileID: 0}
-    - target: {fileID: 2278858118117566568, guid: cecd34cae34caa6478de6b2f6e8443e1, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2279528689692094582, guid: cecd34cae34caa6478de6b2f6e8443e1, type: 3}
       propertyPath: m_RootOrder
       value: -1
@@ -191,37 +187,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3409795491224708780, guid: cecd34cae34caa6478de6b2f6e8443e1, type: 3}
-      propertyPath: _upRig
-      value: 
-      objectReference: {fileID: 3349906663714715146}
-    - target: {fileID: 3409795491224708780, guid: cecd34cae34caa6478de6b2f6e8443e1, type: 3}
-      propertyPath: _downRig
-      value: 
-      objectReference: {fileID: 5192793315854631002}
-    - target: {fileID: 3564851252945895793, guid: cecd34cae34caa6478de6b2f6e8443e1, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6274962395288205089, guid: cecd34cae34caa6478de6b2f6e8443e1, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cecd34cae34caa6478de6b2f6e8443e1, type: 3}
---- !u!1 &3349906663714715146 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6274962395288205089, guid: cecd34cae34caa6478de6b2f6e8443e1, type: 3}
-  m_PrefabInstance: {fileID: 8748355877372395819}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &5192793315854631002 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3564851252945895793, guid: cecd34cae34caa6478de6b2f6e8443e1, type: 3}
-  m_PrefabInstance: {fileID: 8748355877372395819}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &6213386109487343495 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3409795491224708780, guid: cecd34cae34caa6478de6b2f6e8443e1, type: 3}

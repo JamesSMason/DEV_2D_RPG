@@ -1,4 +1,4 @@
-using JSM.RPG.Party;
+using JSM.RPG.Combat;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -40,41 +40,32 @@ namespace JSM.RPG.Enemies
     public class Enemy
     {
         public string EnemyName;
-        public int Strength;
-        public int Dexterity;
-        public int Constitution;
-        public int Intelligence;
-        public int Wisdom;
-        public int Charisma;
+        public int InitiativeBonus;
         public int ArmorClass;
         public int MaxHP;
         public int CurrentHP;
-        public int DamageDieType;
-        public int NumberOfDamageDice;
-        public int XPValue;
-        public int ProficiencyBonus;
+        public int HitBonus;
         public int NumberOfAttacks;
-        public int Initiative;
-        public GameObject Visuals;
+        public int NumberOfDamageDice;
+        public int DamageDieType;
+        public int DamageBonus;
+        public int XPValue;
+        public CombatVisuals Visuals;
 
-        public Enemy(EnemyInfo stats)
+        public Enemy(EnemyInfo enemyInfo)
         {
-            EnemyName = stats.EnemyName;
-            Strength = stats.Strength;
-            Dexterity = stats.Dexterity;
-            Constitution = stats.Constitution;
-            Intelligence = stats.Intelligence;
-            Wisdom = stats.Wisdom;
-            Charisma = stats.Charisma;
-            ArmorClass = stats.ArmorClass;
-            MaxHP = stats.MaxHP;
-            CurrentHP = stats.MaxHP;
-            DamageDieType = stats.DamageDieType;
-            NumberOfDamageDice = stats.NumberOfDamageDice;
-            XPValue = stats.XPValue;
-            ProficiencyBonus = stats.ProficiencyBonus;
-            NumberOfAttacks = stats.NumberOfAttacks;
-            Visuals = stats.Visuals;
+            EnemyName = enemyInfo.EnemyName;
+            InitiativeBonus = enemyInfo.InitiativeBonus;
+            ArmorClass = enemyInfo.ArmorClass;
+            MaxHP = enemyInfo.MaxHP;
+            CurrentHP = enemyInfo.MaxHP;
+            HitBonus = enemyInfo.HitBonus;
+            NumberOfAttacks = enemyInfo.NumberOfAttacks;
+            NumberOfDamageDice = enemyInfo.NumberOfDamageDice;
+            DamageDieType = enemyInfo.DamageDieType;
+            DamageBonus = enemyInfo.DamageBonus;
+            XPValue = enemyInfo.XPValue;
+            Visuals = enemyInfo.Visuals;
         }
     }
 }

@@ -1,3 +1,6 @@
+using JSM.RPG.Combat;
+using JSM.RPG.Player;
+using JSM.Utilities;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,14 +9,25 @@ namespace JSM.RPG.Party
 {
     public class PartyHandler : MonoBehaviour
     {
-        [SerializeField] private PartyMemberInfo _defaultPartyMember = null;
-        [SerializeField] private PartyMemberInfo[] _allMembers = null;
-        [SerializeField] private List<PartyMember> _currentParty = new List<PartyMember>();
+        public PartyHandler Instance { get; private set; } = null;
+
+        [SerializeField] private PlayerStats _defaultPartyMember = null;
+        [SerializeField] private PlayerStats[] _allMembers;
+        [SerializeField] private List<PlayerStats> _currentParty = new List<PlayerStats>();
 
         #region Unity Messages
 
         private void Awake()
         {
+            if (Instance != null)
+            {
+                Destroy(this.gameObject);
+            }
+            else
+            {
+                Instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
             AddMemberToPartyByName(_defaultPartyMember.MemberName);
         }
 
@@ -23,59 +37,16 @@ namespace JSM.RPG.Party
 
         private void AddMemberToPartyByName(string memberName)
         {
-            foreach (PartyMemberInfo member in _allMembers)
+            foreach (PlayerStats member in _allMembers)
             {
-                if (member.name == memberName)
+                if (string.Equals(member.MemberName, memberName, StringComparison.CurrentCultureIgnoreCase))
                 {
-                    PartyMember newMember = new PartyMember(member);
-                    _currentParty.Add(newMember);
+                    _currentParty.Add(member);
                     break;
                 }
             }
         }
 
         #endregion
-    }
-
-    [Serializable]
-    public class PartyMember
-    {
-        public string Name;
-        public int Strength;
-        public int Dexterity;
-        public int Constitution;
-        public int Intelligence;
-        public int Wisdom;
-        public int Charisma;
-        public int ArmorClass;
-        public int MaxHP;
-        public int CurrentHP;
-        public int DamageDieType;
-        public int NumberOfDamageDice;
-        public int XPValue;
-        public int ProficiencyBonus;
-        public int NumberOfAttacks;
-        public int Initiative;
-        public GameObject Visuals;
-
-        public PartyMember(PartyMemberInfo stats)
-        {
-            Name = stats.MemberName;
-            Strength = stats.Strength;
-            Dexterity = stats.Dexterity;
-            Constitution = stats.Constitution;
-            Intelligence = stats.Intelligence;
-            Wisdom = stats.Wisdom;
-            Charisma = stats.Charisma;
-            ArmorClass = stats.ArmorClass;
-            MaxHP = stats.MaxHP;
-            CurrentHP = stats.MaxHP;
-            DamageDieType = stats.DamageDieType;
-            NumberOfDamageDice = stats.NumberOfDamageDice;
-            XPValue = stats.XPValue;
-            ProficiencyBonus = stats.ProficiencyBonus;
-            NumberOfAttacks = stats.NumberOfAttacks;
-            Visuals = stats.Visuals;
-        }
     }
 }
