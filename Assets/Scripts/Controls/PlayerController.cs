@@ -1,6 +1,5 @@
 using CustomizableCharacters;
 using UnityEngine;
-using UnityEngine.Windows;
 
 namespace JSM.RPG.Controls
 {

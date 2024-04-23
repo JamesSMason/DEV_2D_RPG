@@ -1,15 +1,21 @@
 using JSM.RPG.Enemies;
 using JSM.RPG.Party;
 using JSM.RPG.Player;
-using JSM.Utilities;
-using System;
 using System.Collections.Generic;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace JSM.RPG.Combat
 {
     public class CombatSystem : MonoBehaviour
     {
+        //Adding this session
+        [Header("UI")]
+        [SerializeField] private GameObject[] _enemySelectionButtons = null;
+        [SerializeField] private GameObject _battleMenu = null;
+        [SerializeField] private GameObject _enemySelectionMenu = null;
+        //done
         [Header("Spawn Points")]
         [SerializeField] private List<Transform> _partySpawnPoints = new List<Transform>();
         [SerializeField] private List<Transform> _enemySpawnPoints = new List<Transform>();
@@ -18,11 +24,34 @@ namespace JSM.RPG.Combat
         [SerializeField] List<CombatEntities> _partyCombatants = new List<CombatEntities>();
         [SerializeField] List<CombatEntities> _enemyCombatants = new List<CombatEntities>();
 
+        //Adding this session
+        private int _currentPlayer = 0;
+        //done
+
         private void Start()
         {
             CreatePartyEntities();
             CreateEnemyEntities();
+            ShowBattleMenu();
         }
+
+        //Adding this session
+        #region Public
+
+        public void ShowBattleMenu()
+        {
+            _battleMenu.SetActive(true);
+        }
+
+        public void ShowEnemySelectionMenu()
+        {
+            _battleMenu.SetActive(false);
+            SetEnemySelectionButtons();
+            _enemySelectionMenu.SetActive(true);
+        }
+
+        #endregion
+        //done
 
         #region Private
 
@@ -58,53 +87,22 @@ namespace JSM.RPG.Combat
             }
         }
 
+        //Adding this session
+        private void SetEnemySelectionButtons()
+        {
+            foreach (GameObject button in _enemySelectionButtons)
+            {
+                button.SetActive(false);
+            }
+
+            for (int i = 0; i < _enemyCombatants.Count; i++)
+            {
+                _enemySelectionButtons[i].GetComponentInChildren<TextMeshProUGUI>().text = _enemyCombatants[i].EntityName;
+                _enemySelectionButtons[i].SetActive(true);
+            }
+        }
+        //done
+
         #endregion
-    }
-
-    [Serializable]
-    public class CombatEntities
-    {
-        public string EntityName;
-        public int Initiative;
-        public int ArmorClass;
-        public int MaxHP;
-        public int CurrentHP;
-        public int HitBonus;
-        public int NumberOfAttacks;
-        public int NumberOfDamageDice;
-        public int DamageDieType;
-        public int DamageBonus;
-        public bool IsPlayer;
-        public CombatVisuals Visuals;
-
-        public void SetEntityValues(PlayerStats stats)
-        {
-            EntityName = stats.MemberName;
-            Initiative = DiceRoller.RollDice(1, 20) + stats.InitiativeBonus;
-            ArmorClass = stats.ArmorClass;
-            MaxHP = stats.MaxHP;
-            CurrentHP = stats.CurrentHP;
-            HitBonus = stats.HitBonus;
-            NumberOfAttacks = stats.NumberOfAttacks;
-            NumberOfDamageDice = stats.NumberOfDamageDice;
-            DamageDieType = stats.DamageDieType;
-            DamageBonus = stats.DamageBonus;
-            IsPlayer = true;
-        }
-
-        public void SetEntityValues(Enemy stats)
-        {
-            EntityName = stats.EnemyName;
-            Initiative = DiceRoller.RollDice(1, 20) + stats.InitiativeBonus;
-            ArmorClass = stats.ArmorClass;
-            MaxHP = stats.MaxHP;
-            CurrentHP = stats.MaxHP;
-            HitBonus = stats.HitBonus;
-            NumberOfAttacks = stats.NumberOfAttacks;
-            NumberOfDamageDice = stats.NumberOfDamageDice;
-            DamageDieType = stats.DamageDieType;
-            DamageBonus = stats.DamageBonus;
-            IsPlayer = false;
-        }
     }
 }
