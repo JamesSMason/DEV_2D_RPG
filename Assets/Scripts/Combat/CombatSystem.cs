@@ -1,21 +1,18 @@
 using JSM.RPG.Enemies;
 using JSM.RPG.Party;
 using JSM.RPG.Player;
+using System;
 using System.Collections.Generic;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace JSM.RPG.Combat
 {
     public class CombatSystem : MonoBehaviour
     {
-        //Adding this session
-        [Header("UI")]
-        [SerializeField] private GameObject[] _enemySelectionButtons = null;
-        [SerializeField] private GameObject _battleMenu = null;
-        [SerializeField] private GameObject _enemySelectionMenu = null;
-        //done
+        public static CombatSystem Instance { get; private set; } = null;
+
+        public static Action OnPlayerSelectionChanged;
+
         [Header("Spawn Points")]
         [SerializeField] private List<Transform> _partySpawnPoints = new List<Transform>();
         [SerializeField] private List<Transform> _enemySpawnPoints = new List<Transform>();
@@ -24,34 +21,33 @@ namespace JSM.RPG.Combat
         [SerializeField] List<CombatEntities> _partyCombatants = new List<CombatEntities>();
         [SerializeField] List<CombatEntities> _enemyCombatants = new List<CombatEntities>();
 
-        //Adding this session
         private int _currentPlayer = 0;
-        //done
+
+        public int EnemyCount => _enemyCombatants.Count;
+        public string EnemyName(int i) => _enemyCombatants[i].EntityName;
+        public CombatEntities PlayerStats => _partyCombatants[_currentPlayer];
+
+        #region Unity Messages
+
+        private void Awake()
+        {
+            if (Instance == null)
+            {
+                Instance = this;
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
+        }
 
         private void Start()
         {
             CreatePartyEntities();
             CreateEnemyEntities();
-            ShowBattleMenu();
-        }
-
-        //Adding this session
-        #region Public
-
-        public void ShowBattleMenu()
-        {
-            _battleMenu.SetActive(true);
-        }
-
-        public void ShowEnemySelectionMenu()
-        {
-            _battleMenu.SetActive(false);
-            SetEnemySelectionButtons();
-            _enemySelectionMenu.SetActive(true);
         }
 
         #endregion
-        //done
 
         #region Private
 
@@ -69,6 +65,7 @@ namespace JSM.RPG.Combat
                 _allCombatants.Add(newEntity);
                 _partyCombatants.Add(newEntity);
             }
+            OnPlayerSelectionChanged();
         }
 
         private void CreateEnemyEntities()
@@ -86,22 +83,6 @@ namespace JSM.RPG.Combat
                 _enemyCombatants.Add(newEntity);
             }
         }
-
-        //Adding this session
-        private void SetEnemySelectionButtons()
-        {
-            foreach (GameObject button in _enemySelectionButtons)
-            {
-                button.SetActive(false);
-            }
-
-            for (int i = 0; i < _enemyCombatants.Count; i++)
-            {
-                _enemySelectionButtons[i].GetComponentInChildren<TextMeshProUGUI>().text = _enemyCombatants[i].EntityName;
-                _enemySelectionButtons[i].SetActive(true);
-            }
-        }
-        //done
 
         #endregion
     }

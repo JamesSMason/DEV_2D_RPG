@@ -1,3 +1,4 @@
+using JSM.RPG.Combat;
 using JSM.RPG.Player;
 using TMPro;
 using UnityEngine;
@@ -19,15 +20,26 @@ namespace JSM.RPG.UI.Combat
         [SerializeField] private TextMeshProUGUI _baseDamageText = null;
         [SerializeField] private TextMeshProUGUI _damageBonusText = null;
 
-        private void Start()
+        #region Unity Messages
+
+        private void OnEnable()
         {
-            SetText(_playerStats);
+            CombatSystem.OnPlayerSelectionChanged += CombatSystem_OnPlayerSelectionChanged;
         }
 
-        public void SetText(PlayerStats playerStats)
+        private void OnDisable()
         {
-            _nameText.text = $"{playerStats.MemberName}";
-            _initiativeText.text = $"{playerStats.InitiativeBonus}";
+            CombatSystem.OnPlayerSelectionChanged -= CombatSystem_OnPlayerSelectionChanged;
+        }
+
+        #endregion
+
+        #region Private
+
+        public void SetText(CombatEntities playerStats)
+        {
+            _nameText.text = $"{playerStats.EntityName}";
+            _initiativeText.text = $"{playerStats.Initiative}";
             _aCText.text = $"{playerStats.ArmorClass}";
             _hPText.text = $"{playerStats.CurrentHP} / {playerStats.MaxHP}";
             _hitBonusText.text = $"{playerStats.HitBonus}";
@@ -35,5 +47,16 @@ namespace JSM.RPG.UI.Combat
             _baseDamageText.text = $"{playerStats.NumberOfDamageDice}d{playerStats.DamageDieType}";
             _damageBonusText.text = $"{playerStats.DamageBonus}";
         }
+
+        #endregion
+
+        #region Events
+
+        private void CombatSystem_OnPlayerSelectionChanged()
+        {
+            SetText(CombatSystem.Instance.PlayerStats);
+        }
+
+        #endregion
     }
 }
