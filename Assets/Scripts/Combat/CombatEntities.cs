@@ -8,6 +8,12 @@ namespace JSM.RPG.Combat
     [Serializable]
     public class CombatEntities
     {
+        public enum Action
+        {
+            Attack,
+            Run,
+        }
+
         public string EntityName;
         public int Initiative;
         public int ArmorClass;
@@ -20,6 +26,10 @@ namespace JSM.RPG.Combat
         public int DamageBonus;
         public bool IsPlayer;
         public CombatVisuals Visuals;
+        public Action CombatAction;
+        public int Target;
+
+        #region Public
 
         public void SetEntityValues(PlayerStats stats)
         {
@@ -50,5 +60,12 @@ namespace JSM.RPG.Combat
             DamageBonus = stats.DamageBonus;
             IsPlayer = false;
         }
+
+        public void SetTarget(int target)
+        {
+            Target = target;
+        }
+
+        #endregion
     }
 }

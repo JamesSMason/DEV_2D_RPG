@@ -1,7 +1,9 @@
 using JSM.RPG.Enemies;
 using JSM.RPG.Party;
 using JSM.RPG.Player;
+using JSM.Utilities;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,7 +13,8 @@ namespace JSM.RPG.Combat
     {
         public static CombatSystem Instance { get; private set; } = null;
 
-        public static Action OnPlayerSelectionChanged;
+        public static Action<CombatEntities> OnPlayerSelectionChanged;
+        public static Action OnEnemySelected;
 
         [Header("Spawn Points")]
         [SerializeField] private List<Transform> _partySpawnPoints = new List<Transform>();
@@ -45,6 +48,32 @@ namespace JSM.RPG.Combat
         {
             CreatePartyEntities();
             CreateEnemyEntities();
+            OnPlayerSelectionChanged?.Invoke(_partyCombatants[_currentPlayer]);
+            OnEnemySelected?.Invoke();
+        }
+
+        #endregion
+
+        #region Public
+
+        public void SelectEnemy(int currentEnemy)
+        {
+            CombatEntities currentPlayerEntity = _partyCombatants[_currentPlayer];
+            currentPlayerEntity.SetTarget(_allCombatants.IndexOf(_enemyCombatants[currentEnemy]));
+            currentPlayerEntity.CombatAction = CombatEntities.Action.Attack;
+            _currentPlayer++;
+
+            if (_currentPlayer >= _partyCombatants.Count)
+            {
+                AttackAction(currentPlayerEntity, _allCombatants[currentPlayerEntity.Target]);
+            }
+            else
+            {
+                //display battle options for next player character
+                Debug.Log("next choice");
+
+                OnEnemySelected?.Invoke();
+            }
         }
 
         #endregion
@@ -65,7 +94,6 @@ namespace JSM.RPG.Combat
                 _allCombatants.Add(newEntity);
                 _partyCombatants.Add(newEntity);
             }
-            OnPlayerSelectionChanged();
         }
 
         private void CreateEnemyEntities()
@@ -75,6 +103,7 @@ namespace JSM.RPG.Combat
             {
                 CombatEntities newEntity = new CombatEntities();
                 newEntity.SetEntityValues(enemyParty[i]);
+                newEntity.EntityName += $" {i}";
 
                 CombatVisuals tempCombatVisuals = Instantiate(enemyParty[i].Visuals, _enemySpawnPoints[i].position, Quaternion.identity);
                 newEntity.Visuals = tempCombatVisuals;
@@ -82,6 +111,45 @@ namespace JSM.RPG.Combat
                 _allCombatants.Add(newEntity);
                 _enemyCombatants.Add(newEntity);
             }
+        }
+
+        private void AttackAction(CombatEntities currentAttacker, CombatEntities currentTarget)
+        {
+            currentAttacker.Visuals.PlayAttackAnimation();
+
+            bool successfulHit = DiceRoller.RollDice(1, 20) + currentAttacker.HitBonus >= currentTarget.ArmorClass;
+
+            if (successfulHit)
+            {
+                int damage = 0;
+                for (int i = 0; i < currentAttacker.NumberOfAttacks; i++)
+                {
+                    int potentialDamage = DiceRoller.RollDice(currentAttacker.NumberOfDamageDice, currentAttacker.DamageDieType) + currentAttacker.DamageBonus;
+                    if (potentialDamage <= 0) {  potentialDamage = 1; }
+                    damage += potentialDamage;
+                }
+                currentTarget.CurrentHP -= damage;
+                currentTarget.Visuals.PlayHurtAnimation();
+                currentTarget.Visuals.DisplayDamage(damage.ToString());
+            }
+            else
+            {
+                currentTarget.Visuals.DisplayDamage("MISS");
+            }
+
+            if (currentTarget.CurrentHP <= 0)
+            {
+                Debug.Log($"{currentTarget.EntityName} is dead.");
+            }
+        }
+
+        #endregion
+
+        #region Routines
+
+        private IEnumerator AttackRoutine(CombatEntities currentAttacker, CombatEntities currentTarget)
+        {
+            yield return null;
         }
 
         #endregion

@@ -1,5 +1,4 @@
 using JSM.RPG.Combat;
-using JSM.RPG.Player;
 using TMPro;
 using UnityEngine;
 
@@ -7,9 +6,6 @@ namespace JSM.RPG.UI.Combat
 {
     public class DetailsUI : MonoBehaviour
     {
-        [Header("FOR TESTING")]
-        [SerializeField] private PlayerStats _playerStats = null;
-
         [Header("UI Text Boxes")]
         [SerializeField] private TextMeshProUGUI _nameText = null;
         [SerializeField] private TextMeshProUGUI _initiativeText = null;
@@ -52,9 +48,9 @@ namespace JSM.RPG.UI.Combat
 
         #region Events
 
-        private void CombatSystem_OnPlayerSelectionChanged()
+        private void CombatSystem_OnPlayerSelectionChanged(CombatEntities playerStats)
         {
-            SetText(CombatSystem.Instance.PlayerStats);
+            SetText(playerStats);
         }
 
         #endregion

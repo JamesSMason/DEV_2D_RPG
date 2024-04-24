@@ -32,6 +32,7 @@ namespace JSM.RPG.Enemies
         }
 
         #endregion
+
         #region Private
 
         private void GenerateEnemyByName(string enemyName)

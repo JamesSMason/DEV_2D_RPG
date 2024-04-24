@@ -187,6 +187,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6632181009562467514, guid: cecd34cae34caa6478de6b2f6e8443e1, type: 3}
+      propertyPath: m_text
+      value: DEFAULT
+      objectReference: {fileID: 0}
+    - target: {fileID: 6632181009562467514, guid: cecd34cae34caa6478de6b2f6e8443e1, type: 3}
+      propertyPath: m_fontColor.a
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6632181009562467514, guid: cecd34cae34caa6478de6b2f6e8443e1, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 2785017855
+      objectReference: {fileID: 0}
+    - target: {fileID: 7611023058526022156, guid: cecd34cae34caa6478de6b2f6e8443e1, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -0.049
+      objectReference: {fileID: 0}
+    - target: {fileID: 7611023058526022156, guid: cecd34cae34caa6478de6b2f6e8443e1, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 2.122
+      objectReference: {fileID: 0}
+    - target: {fileID: 7611023058526022156, guid: cecd34cae34caa6478de6b2f6e8443e1, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

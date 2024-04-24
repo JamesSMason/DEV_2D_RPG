@@ -14,12 +14,12 @@ namespace JSM.RPG.UI.Combat
 
         private void OnEnable()
         {
-            CombatSystem.OnPlayerSelectionChanged += CombatSystem_OnPlayerSelectionChanged;
+            CombatSystem.OnEnemySelected += CombatSystem_OnEnemySelected;
         }
 
         private void OnDisable()
         {
-            CombatSystem.OnPlayerSelectionChanged -= CombatSystem_OnPlayerSelectionChanged;
+            CombatSystem.OnEnemySelected -= CombatSystem_OnEnemySelected;
         }
 
         #endregion
@@ -60,8 +60,9 @@ namespace JSM.RPG.UI.Combat
 
         #region Events
 
-        private void CombatSystem_OnPlayerSelectionChanged()
+        private void CombatSystem_OnEnemySelected()
         {
+            _enemySelectionMenu.SetActive(false);
             ShowBattleMenu();
         }
 
