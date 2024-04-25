@@ -6,6 +6,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
 namespace JSM.RPG.Combat
 {
@@ -25,6 +27,8 @@ namespace JSM.RPG.Combat
         public static CombatSystem Instance { get; private set; } = null;
 
         public static Action<CombatEntities> OnPlayerSelectionChanged;
+        public static Action OnShowMenu;
+        public static Action OnHideMenus;
         public static Action OnEnemySelected;
 
         [Header("Combat State")]
@@ -40,6 +44,7 @@ namespace JSM.RPG.Combat
         private int _currentPlayer = 0;
 
         private const float TURN_DURATION = 2.0f;
+        private const string WORLD_SCENE = "WorldScene";
 
         public int EnemyCount => _enemyCombatants.Count;
         public string EnemyName(int i) => _enemyCombatants[i].EntityName;
@@ -64,7 +69,7 @@ namespace JSM.RPG.Combat
             CreatePartyEntities();
             CreateEnemyEntities();
             OnPlayerSelectionChanged?.Invoke(_partyCombatants[_currentPlayer]);
-            OnEnemySelected?.Invoke();
+            OnShowMenu?.Invoke();
         }
 
         #endregion
@@ -93,20 +98,33 @@ namespace JSM.RPG.Combat
 
         #region Private
 
-        private void CreatePartyEntities()
+        private void AttackAction(CombatEntities currentAttacker, CombatEntities currentTarget)
         {
-            List<PlayerStats> currentParty = PartyHandler.Instance.CurrentParty;
-            for (int i = 0; i < currentParty.Count; i++)
+            currentAttacker.Visuals.PlayAttackAnimation();
+
+            bool successfulHit = DiceRoller.RollDice(1, 20) + currentAttacker.HitBonus >= currentTarget.ArmorClass;
+
+            if (successfulHit)
             {
-                CombatEntities newEntity = new CombatEntities();
-                newEntity.SetEntityValues(currentParty[i]);
+                int damage = 0;
+                for (int i = 0; i < currentAttacker.NumberOfAttacks; i++)
+                {
+                    int potentialDamage = DiceRoller.RollDice(currentAttacker.NumberOfDamageDice, currentAttacker.DamageDieType) + currentAttacker.DamageBonus;
+                    if (potentialDamage <= 0) { potentialDamage = 1; }
+                    damage += potentialDamage;
+                }
+                currentTarget.ApplyDamage(damage);
+                currentTarget.Visuals.DisplayDamage(damage.ToString());
 
-                CombatVisuals tempCombatVisuals = Instantiate(currentParty[i].Visuals, _partySpawnPoints[i].position, Quaternion.identity);
-                newEntity.Visuals = tempCombatVisuals;
-
-                _allCombatants.Add(newEntity);
-                _partyCombatants.Add(newEntity);
+                OnPlayerSelectionChanged?.Invoke(currentTarget);
+                OnEnemySelected?.Invoke();
             }
+            else
+            {
+                currentTarget.Visuals.DisplayDamage("MISS");
+            }
+
+            SaveHealth();
         }
 
         private void CreateEnemyEntities()
@@ -126,27 +144,41 @@ namespace JSM.RPG.Combat
             }
         }
 
-        private void AttackAction(CombatEntities currentAttacker, CombatEntities currentTarget)
+        private void CreatePartyEntities()
         {
-            currentAttacker.Visuals.PlayAttackAnimation();
-
-            bool successfulHit = DiceRoller.RollDice(1, 20) + currentAttacker.HitBonus >= currentTarget.ArmorClass;
-
-            if (successfulHit)
+            List<PartyMember> currentParty = PartyHandler.Instance.CurrentParty;
+            for (int i = 0; i < currentParty.Count; i++)
             {
-                int damage = 0;
-                for (int i = 0; i < currentAttacker.NumberOfAttacks; i++)
-                {
-                    int potentialDamage = DiceRoller.RollDice(currentAttacker.NumberOfDamageDice, currentAttacker.DamageDieType) + currentAttacker.DamageBonus;
-                    if (potentialDamage <= 0) {  potentialDamage = 1; }
-                    damage += potentialDamage;
-                }
-                currentTarget.ApplyDamage(damage);
-                currentTarget.Visuals.DisplayDamage(damage.ToString());
+                CombatEntities newEntity = new CombatEntities();
+                newEntity.SetEntityValues(currentParty[i]);
+
+                CombatVisuals tempCombatVisuals = Instantiate(currentParty[i].CombatVisuals, _partySpawnPoints[i].position, Quaternion.identity);
+                newEntity.Visuals = tempCombatVisuals;
+
+                _allCombatants.Add(newEntity);
+                _partyCombatants.Add(newEntity);
             }
-            else
+        }
+
+        private int GetRandomTarget(bool isTargetAPlayer)
+        {
+            List<int> targetIndexList = new List<int>();
+            for (int i = 0; i < _allCombatants.Count; i++)
             {
-                currentTarget.Visuals.DisplayDamage("MISS");
+                if (_allCombatants[i].IsPlayer == isTargetAPlayer)
+                {
+                    targetIndexList.Add(i);
+                }
+            }
+            int randomIndex = Random.Range(0, targetIndexList.Count);
+            return targetIndexList[randomIndex];
+        }
+
+        private void SaveHealth()
+        {
+            for (int i = 0; i < _partyCombatants.Count; ++i)
+            {
+                PartyHandler.Instance.SaveHealth(i, _partyCombatants[i].CurrentHP);
             }
         }
 
@@ -156,22 +188,25 @@ namespace JSM.RPG.Combat
 
         private IEnumerator CombatRoutine()
         {
-            OnEnemySelected?.Invoke();
+            OnHideMenus?.Invoke();
             _state = CombatState.Battle;
 
-            foreach (CombatEntities combatEntity in _allCombatants)
+            for (int i = 0; i < _allCombatants.Count; i++)
             {
-                switch (combatEntity.CombatAction)
+                if (_state == CombatState.Battle)
                 {
-                    case CombatEntities.Action.Attack:
-                        yield return StartCoroutine(AttackRoutine(combatEntity));
-                        break;
-                    case CombatEntities.Action.Run:
-                        Debug.Log($"{combatEntity.EntityName} is running");
-                        break;
-                    default:
-                        Debug.Log("No action found");
-                        break;
+                    switch (_allCombatants[i].CombatAction)
+                    {
+                        case CombatEntities.Action.Attack:
+                            yield return StartCoroutine(AttackRoutine(_allCombatants[i]));
+                            break;
+                        case CombatEntities.Action.Run:
+                            Debug.Log($"{_allCombatants[i].EntityName} is running");
+                            break;
+                        default:
+                            Debug.Log("No action found");
+                            break;
+                    }
                 }
             }
 
@@ -179,6 +214,7 @@ namespace JSM.RPG.Combat
             {
                 _currentPlayer = 0;
                 OnPlayerSelectionChanged?.Invoke(_partyCombatants[_currentPlayer]);
+                OnShowMenu?.Invoke();
             }
 
             yield return null;
@@ -188,6 +224,10 @@ namespace JSM.RPG.Combat
         {
             if (currentAttacker.IsPlayer)
             {
+                if (_allCombatants.Contains(currentAttacker) && _allCombatants[currentAttacker.Target].IsPlayer || currentAttacker.Target >= _allCombatants.Count)
+                {
+                    currentAttacker.SetTarget(GetRandomTarget(false));
+                }
                 CombatEntities currentTarget = _allCombatants[currentAttacker.Target];
                 AttackAction(currentAttacker, currentTarget);
 
@@ -195,8 +235,6 @@ namespace JSM.RPG.Combat
 
                 if (currentTarget.CurrentHP <= 0)
                 {
-                    Debug.Log($"You have killed {currentTarget.EntityName}!");
-
                     yield return new WaitForSeconds(TURN_DURATION);
 
                     _allCombatants.Remove(currentTarget);
@@ -205,7 +243,31 @@ namespace JSM.RPG.Combat
                     if (_enemyCombatants.Count <= 0)
                     {
                         _state = CombatState.Won;
-                        Debug.Log("You have won!");
+                        yield return new WaitForSeconds(TURN_DURATION);
+                        SceneManager.LoadScene(WORLD_SCENE);
+                    }
+                }
+            }
+
+            if (!currentAttacker.IsPlayer)
+            {
+                currentAttacker.SetTarget(GetRandomTarget(true));
+                CombatEntities currentTarget = _allCombatants[currentAttacker.Target];
+                AttackAction(currentAttacker, currentTarget);
+
+                yield return new WaitForSeconds(TURN_DURATION);
+
+                if (currentTarget.CurrentHP <= 0)
+                {
+                    yield return new WaitForSeconds(TURN_DURATION);
+
+                    _allCombatants.Remove(currentTarget);
+                    _partyCombatants.Remove(currentTarget);
+
+                    if (_partyCombatants.Count <= 0)
+                    {
+                        _state = CombatState.Lost;
+                        Debug.Log("YOU ARE DEAD!");
                     }
                 }
             }

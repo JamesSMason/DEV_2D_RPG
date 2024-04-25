@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 1091164181962647652}
   - component: {fileID: 5754032508036190936}
   - component: {fileID: 2332675185973185019}
-  - component: {fileID: -364929385589892801}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -34,7 +33,7 @@ Transform:
   m_Children:
   - {fileID: 7406983319685116253}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!70 &1091164181962647652
 CapsuleCollider2D:
@@ -105,7 +104,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3487200409288295466}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5d0e98d1d73bbc8408b32e4cbaf79b70, type: 3}
   m_Name: 
@@ -113,29 +112,6 @@ MonoBehaviour:
   _moveSpeed: 4
   _customizableCharacter: {fileID: 6213386109487343495}
   _animator: {fileID: 8430715311022317615}
---- !u!114 &-364929385589892801
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3487200409288295466}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa01533e27e2e3d4da9b1cb85aef687a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _memberName: James
-  _maxHP: 12
-  _currentHP: 12
-  _armorClass: 12
-  _hitBonus: 5
-  _damageDieType: 8
-  _numberOfDamageDice: 1
-  _damageBonus: 3
-  _numberOfAttacks: 1
-  _initiativeBonus: 2
-  _combatVisuals: {fileID: 6663023017781917835}
 --- !u!1001 &8748355877372395819
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -232,17 +208,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac99109281e8425e83e9dd59f3175609, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &6663023017781917835 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2675058396392061344, guid: cecd34cae34caa6478de6b2f6e8443e1, type: 3}
-  m_PrefabInstance: {fileID: 8748355877372395819}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 50e52c9820af8d2449c46047ec78903f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &7406983319685116253 stripped

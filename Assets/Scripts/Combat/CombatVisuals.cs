@@ -40,7 +40,6 @@ namespace JSM.RPG.Combat
         public void PlayDieAnimation()
         {
             _animator.SetTrigger(DIE_ANIMATION);
-            Destroy(gameObject, DESTRUCTION_DELAY);
         }
 
         public void DisplayDamage(string damage)

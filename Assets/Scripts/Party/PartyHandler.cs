@@ -1,5 +1,4 @@
 using JSM.RPG.Player;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,11 +8,14 @@ namespace JSM.RPG.Party
     {
         public static PartyHandler Instance { get; private set; } = null;
 
-        [SerializeField] private PlayerStats _defaultPartyMember = null;
-        [SerializeField] private PlayerStats[] _allMembers;
-        [SerializeField] private List<PlayerStats> _currentParty = new List<PlayerStats>();
+        [SerializeField] private PlayerInfo _defaultPartyMember = null;
+        [SerializeField] private PlayerInfo[] _allMembers;
+        [SerializeField] private List<PartyMember> _currentParty = new List<PartyMember>();
 
-        public List<PlayerStats> CurrentParty => _currentParty;
+        private Vector3 _playerPosition = Vector3.zero;
+
+        public List<PartyMember> CurrentParty => _currentParty;
+        public Vector3 PlayerPosition => _playerPosition;
 
         #region Unity Messages
 
@@ -26,9 +28,23 @@ namespace JSM.RPG.Party
             else
             {
                 Instance = this;
+                AddMemberToPartyByName(_defaultPartyMember.PlayerName);
                 DontDestroyOnLoad(gameObject);
             }
-            AddMemberToPartyByName(_defaultPartyMember.MemberName);
+        }
+
+        #endregion
+
+        #region Public
+
+        public void SaveHealth(int partyMember, int health)
+        {
+            _currentParty[partyMember].ChangeHealth(health);
+        }
+
+        public void SetPosition(Vector3 position)
+        {
+            _playerPosition = position;
         }
 
         #endregion
@@ -37,11 +53,12 @@ namespace JSM.RPG.Party
 
         private void AddMemberToPartyByName(string memberName)
         {
-            foreach (PlayerStats member in _allMembers)
+            foreach (PlayerInfo member in _allMembers)
             {
-                if (string.Equals(member.MemberName, memberName, StringComparison.CurrentCultureIgnoreCase))
+                if (member.PlayerName == memberName)
                 {
-                    _currentParty.Add(member);
+                    PartyMember newMember = new PartyMember(member);
+                    _currentParty.Add(newMember);
                     break;
                 }
             }

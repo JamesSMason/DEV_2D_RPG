@@ -26,9 +26,23 @@ namespace JSM.RPG.Enemies
                 Instance = this;
                 DontDestroyOnLoad(gameObject);
             }
-            GenerateEnemyByName(_defaultEnemy.EnemyName);
-            GenerateEnemyByName(_defaultEnemy.EnemyName);
-            GenerateEnemyByName(_defaultEnemy.EnemyName);
+        }
+
+        #endregion
+
+        #region Public
+
+        public void GenerateEnemiesByEncounter(Encounter[] encounterArray)
+        {
+            _currentEnemies.Clear();
+            int randomEnemyIndex = Random.Range(0, encounterArray.Length);
+            int numEnemies = Random.Range(encounterArray[randomEnemyIndex].MinEnemies, encounterArray[randomEnemyIndex].MaxEnemies + 1);
+
+            for (int i = 0; i < numEnemies; i++)
+            {
+                string name = encounterArray[randomEnemyIndex].EnemyInfo.EnemyName;
+                GenerateEnemyByName(name);
+            }
         }
 
         #endregion

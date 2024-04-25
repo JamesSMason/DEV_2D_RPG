@@ -9,22 +9,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef435d95e942e204d8b68082a5afe110, type: 3}
+  m_Script: {fileID: 11500000, guid: 73490d9d114f1f6409351cb82ea224e2, type: 3}
   m_Name: James
   m_EditorClassIdentifier: 
-  MemberName: James
-  Level: 1
-  Strength: 15
-  Dexterity: 11
-  Constitution: 14
-  Intelligence: 8
-  Wisdom: 9
-  Charisma: 11
-  ArmorClass: 12
-  MaxHP: 12
-  DamageDieType: 1
-  NumberOfDamageDice: 6
-  XPValue: 0
-  ProficiencyBonus: 2
+  PlayerName: James
+  InitiativeBonus: 2
+  ArmorClass: 30
+  MaxHP: 40
+  HitBonus: 3
   NumberOfAttacks: 1
-  Visuals: {fileID: 3652770488642877670, guid: 9dac9d55d1aa5d74ea7ae27792423ce5, type: 3}
+  NumberOfDamageDice: 1
+  DamageDieType: 8
+  DamageBonus: 3
+  OverworldVisuals: {fileID: 3487200409288295466, guid: 2ff254f459570e54a89e5db8a93dcc44, type: 3}
+  CombatVisuals: {fileID: 2675058396392061344, guid: cecd34cae34caa6478de6b2f6e8443e1, type: 3}

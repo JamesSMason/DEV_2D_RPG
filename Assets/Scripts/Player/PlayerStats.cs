@@ -38,11 +38,6 @@ namespace JSM.RPG.Player
         public void ChangeHealth(int health)
         {
             _currentHP = health;
-
-            if (_currentHP <= 0)
-            {
-                _combatVisuals.PlayDieAnimation();
-            }
         }
     }
 }

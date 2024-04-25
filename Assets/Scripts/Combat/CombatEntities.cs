@@ -1,8 +1,7 @@
 using JSM.RPG.Enemies;
-using JSM.RPG.Player;
+using JSM.RPG.Party;
 using JSM.Utilities;
 using System;
-using UnityEditor;
 
 namespace JSM.RPG.Combat
 {
@@ -32,9 +31,9 @@ namespace JSM.RPG.Combat
 
         #region Public
 
-        public void SetEntityValues(PlayerStats stats)
+        public void SetEntityValues(PartyMember stats)
         {
-            EntityName = stats.MemberName;
+            EntityName = stats.PlayerName;
             Initiative = DiceRoller.RollDice(1, 20) + stats.InitiativeBonus;
             ArmorClass = stats.ArmorClass;
             MaxHP = stats.MaxHP;
