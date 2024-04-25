@@ -11,11 +11,24 @@ namespace JSM.RPG.Combat
 {
     public class CombatSystem : MonoBehaviour
     {
+        [Serializable]
+        private enum CombatState
+        {
+            Start,
+            Selection,
+            Battle,
+            Won,
+            Lost,
+            Run,
+        }
+
         public static CombatSystem Instance { get; private set; } = null;
 
         public static Action<CombatEntities> OnPlayerSelectionChanged;
         public static Action OnEnemySelected;
 
+        [Header("Combat State")]
+        [SerializeField] private CombatState _state = CombatState.Start;
         [Header("Spawn Points")]
         [SerializeField] private List<Transform> _partySpawnPoints = new List<Transform>();
         [SerializeField] private List<Transform> _enemySpawnPoints = new List<Transform>();
@@ -25,6 +38,8 @@ namespace JSM.RPG.Combat
         [SerializeField] List<CombatEntities> _enemyCombatants = new List<CombatEntities>();
 
         private int _currentPlayer = 0;
+
+        private const float TURN_DURATION = 2.0f;
 
         public int EnemyCount => _enemyCombatants.Count;
         public string EnemyName(int i) => _enemyCombatants[i].EntityName;
@@ -65,14 +80,12 @@ namespace JSM.RPG.Combat
 
             if (_currentPlayer >= _partyCombatants.Count)
             {
-                AttackAction(currentPlayerEntity, _allCombatants[currentPlayerEntity.Target]);
+                StartCoroutine(CombatRoutine());
             }
             else
             {
-                //display battle options for next player character
-                Debug.Log("next choice");
-
                 OnEnemySelected?.Invoke();
+                OnPlayerSelectionChanged?.Invoke(_partyCombatants[_currentPlayer]);
             }
         }
 
@@ -128,18 +141,12 @@ namespace JSM.RPG.Combat
                     if (potentialDamage <= 0) {  potentialDamage = 1; }
                     damage += potentialDamage;
                 }
-                currentTarget.CurrentHP -= damage;
-                currentTarget.Visuals.PlayHurtAnimation();
+                currentTarget.ApplyDamage(damage);
                 currentTarget.Visuals.DisplayDamage(damage.ToString());
             }
             else
             {
                 currentTarget.Visuals.DisplayDamage("MISS");
-            }
-
-            if (currentTarget.CurrentHP <= 0)
-            {
-                Debug.Log($"{currentTarget.EntityName} is dead.");
             }
         }
 
@@ -147,8 +154,62 @@ namespace JSM.RPG.Combat
 
         #region Routines
 
-        private IEnumerator AttackRoutine(CombatEntities currentAttacker, CombatEntities currentTarget)
+        private IEnumerator CombatRoutine()
         {
+            OnEnemySelected?.Invoke();
+            _state = CombatState.Battle;
+
+            foreach (CombatEntities combatEntity in _allCombatants)
+            {
+                switch (combatEntity.CombatAction)
+                {
+                    case CombatEntities.Action.Attack:
+                        yield return StartCoroutine(AttackRoutine(combatEntity));
+                        break;
+                    case CombatEntities.Action.Run:
+                        Debug.Log($"{combatEntity.EntityName} is running");
+                        break;
+                    default:
+                        Debug.Log("No action found");
+                        break;
+                }
+            }
+
+            if (_state == CombatState.Battle)
+            {
+                _currentPlayer = 0;
+                OnPlayerSelectionChanged?.Invoke(_partyCombatants[_currentPlayer]);
+            }
+
+            yield return null;
+        }
+
+        private IEnumerator AttackRoutine(CombatEntities currentAttacker)
+        {
+            if (currentAttacker.IsPlayer)
+            {
+                CombatEntities currentTarget = _allCombatants[currentAttacker.Target];
+                AttackAction(currentAttacker, currentTarget);
+
+                yield return new WaitForSeconds(TURN_DURATION);
+
+                if (currentTarget.CurrentHP <= 0)
+                {
+                    Debug.Log($"You have killed {currentTarget.EntityName}!");
+
+                    yield return new WaitForSeconds(TURN_DURATION);
+
+                    _allCombatants.Remove(currentTarget);
+                    _enemyCombatants.Remove(currentTarget);
+
+                    if (_enemyCombatants.Count <= 0)
+                    {
+                        _state = CombatState.Won;
+                        Debug.Log("You have won!");
+                    }
+                }
+            }
+
             yield return null;
         }
 

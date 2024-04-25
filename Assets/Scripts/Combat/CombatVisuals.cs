@@ -10,6 +10,8 @@ namespace JSM.RPG.Combat
         [SerializeField] private TextMeshPro _damageText = null;
         [SerializeField] private float _damageDisplayTime = 2.0f;
 
+        private const float DESTRUCTION_DELAY = 2.0f;
+
         private const string ATTACK_ANIMATION = "Attack 1";
         private const string HURT_ANIMATION = "Hurt";
         private const string DIE_ANIMATION = "Die";
@@ -38,6 +40,7 @@ namespace JSM.RPG.Combat
         public void PlayDieAnimation()
         {
             _animator.SetTrigger(DIE_ANIMATION);
+            Destroy(gameObject, DESTRUCTION_DELAY);
         }
 
         public void DisplayDamage(string damage)

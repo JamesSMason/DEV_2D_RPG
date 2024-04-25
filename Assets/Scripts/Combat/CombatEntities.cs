@@ -2,6 +2,7 @@ using JSM.RPG.Enemies;
 using JSM.RPG.Player;
 using JSM.Utilities;
 using System;
+using UnityEditor;
 
 namespace JSM.RPG.Combat
 {
@@ -64,6 +65,20 @@ namespace JSM.RPG.Combat
         public void SetTarget(int target)
         {
             Target = target;
+        }
+
+        public void ApplyDamage(int damage)
+        {
+            CurrentHP -= damage;
+
+            if (CurrentHP <= 0)
+            {
+                Visuals.PlayDieAnimation();
+            }
+            else
+            {
+                Visuals.PlayHurtAnimation();
+            }
         }
 
         #endregion
