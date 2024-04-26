@@ -4290,7 +4290,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _animator: {fileID: 979407271909204228}
   _damageText: {fileID: 6632181009562467514}
-  _damageDisplayTime: 2
+  _damageDisplayTime: 1
 --- !u!1 &1435458137729583846
 GameObject:
   m_ObjectHideFlags: 0
@@ -8539,7 +8539,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0.75}
-  m_SizeDelta: {x: 2, y: 1}
+  m_SizeDelta: {x: 4, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!23 &2292712129377801152
 MeshRenderer:

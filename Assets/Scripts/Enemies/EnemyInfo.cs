@@ -16,6 +16,7 @@ namespace JSM.RPG.Enemies
         public int DamageDieType;
         public int DamageBonus;
         public int XPValue;
+        public int Speed;
         public CombatVisuals Visuals;
     }
 }

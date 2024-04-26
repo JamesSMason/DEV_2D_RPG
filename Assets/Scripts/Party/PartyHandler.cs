@@ -29,6 +29,8 @@ namespace JSM.RPG.Party
             {
                 Instance = this;
                 AddMemberToPartyByName(_defaultPartyMember.PlayerName);
+                AddMemberToPartyByName(_defaultPartyMember.PlayerName);
+                AddMemberToPartyByName(_defaultPartyMember.PlayerName);
                 DontDestroyOnLoad(gameObject);
             }
         }
@@ -39,12 +41,26 @@ namespace JSM.RPG.Party
 
         public void SaveHealth(int partyMember, int health)
         {
-            _currentParty[partyMember].ChangeHealth(health);
+            List<PartyMember> members = GetAliveParty();
+            members[partyMember].ChangeHealth(health);
         }
 
         public void SetPosition(Vector3 position)
         {
             _playerPosition = position;
+        }
+
+        public List<PartyMember> GetAliveParty()
+        {
+            List<PartyMember> aliveParty = new List<PartyMember>();
+            foreach (PartyMember partyMember in _currentParty)
+            {
+                if (partyMember.CurrentHP > 0)
+                {
+                    aliveParty.Add(partyMember);
+                }
+            }
+            return aliveParty;
         }
 
         #endregion

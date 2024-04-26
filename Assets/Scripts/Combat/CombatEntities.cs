@@ -25,6 +25,7 @@ namespace JSM.RPG.Combat
         public int DamageDieType;
         public int DamageBonus;
         public bool IsPlayer;
+        public int Speed;
         public CombatVisuals Visuals;
         public Action CombatAction;
         public int Target;
@@ -43,6 +44,7 @@ namespace JSM.RPG.Combat
             NumberOfDamageDice = stats.NumberOfDamageDice;
             DamageDieType = stats.DamageDieType;
             DamageBonus = stats.DamageBonus;
+            Speed = stats.Speed;
             IsPlayer = true;
         }
 
@@ -58,6 +60,7 @@ namespace JSM.RPG.Combat
             NumberOfDamageDice = stats.NumberOfDamageDice;
             DamageDieType = stats.DamageDieType;
             DamageBonus = stats.DamageBonus;
+            Speed = stats.Speed;
             IsPlayer = false;
         }
 

@@ -1,4 +1,7 @@
 using CustomizableCharacters;
+using JSM.RPG.Environment;
+using JSM.RPG.Party;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace JSM.RPG.Controls
@@ -32,10 +35,16 @@ namespace JSM.RPG.Controls
         private void OnEnable()
         {
             _playerControls.Enable();
+            RandomCombatGenerator.OnCombatStart += RandomCombatGenerator_OnCombatStart;
         }
 
         private void Start()
         {
+            if (PartyHandler.Instance.PlayerPosition != Vector3.zero)
+            {
+                transform.position = PartyHandler.Instance.PlayerPosition;
+            }
+
             ResetRigs();
             HandleDirection();
         }
@@ -53,6 +62,7 @@ namespace JSM.RPG.Controls
         private void OnDisable()
         {
             _playerControls.Disable();
+            RandomCombatGenerator.OnCombatStart -= RandomCombatGenerator_OnCombatStart;
         }
 
         #endregion
@@ -143,6 +153,15 @@ namespace JSM.RPG.Controls
             }
 
             return ret;
+        }
+
+        #endregion
+
+        #region Events
+
+        private void RandomCombatGenerator_OnCombatStart()
+        {
+            PartyHandler.Instance.SetPosition(transform.position);
         }
 
         #endregion

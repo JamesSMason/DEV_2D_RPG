@@ -15,6 +15,7 @@ namespace JSM.RPG.Player
         public int NumberOfDamageDice;
         public int DamageDieType;
         public int DamageBonus;
+        public int Speed;
         public GameObject OverworldVisuals;
         public CombatVisuals CombatVisuals;
     }

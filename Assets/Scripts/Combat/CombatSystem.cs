@@ -1,6 +1,5 @@
 using JSM.RPG.Enemies;
 using JSM.RPG.Party;
-using JSM.RPG.Player;
 using JSM.Utilities;
 using System;
 using System.Collections;
@@ -68,6 +67,7 @@ namespace JSM.RPG.Combat
         {
             CreatePartyEntities();
             CreateEnemyEntities();
+            DetermineBattleOrder();
             OnPlayerSelectionChanged?.Invoke(_partyCombatants[_currentPlayer]);
             OnShowMenu?.Invoke();
         }
@@ -81,6 +81,28 @@ namespace JSM.RPG.Combat
             CombatEntities currentPlayerEntity = _partyCombatants[_currentPlayer];
             currentPlayerEntity.SetTarget(_allCombatants.IndexOf(_enemyCombatants[currentEnemy]));
             currentPlayerEntity.CombatAction = CombatEntities.Action.Attack;
+            _currentPlayer++;
+
+            if (_currentPlayer >= _partyCombatants.Count)
+            {
+                StartCoroutine(CombatRoutine());
+            }
+            else
+            {
+                OnEnemySelected?.Invoke();
+                OnPlayerSelectionChanged?.Invoke(_partyCombatants[_currentPlayer]);
+                OnShowMenu?.Invoke();
+            }
+        }
+
+        public void SelectRunAction()
+        {
+            _state = CombatState.Selection;
+            CombatEntities currentPlayerEntity = _partyCombatants[_currentPlayer];
+            currentPlayerEntity.Initiative = 0;
+            DetermineBattleOrder();
+            currentPlayerEntity.CombatAction = CombatEntities.Action.Run;
+            //OnHideMenus?.Invoke();
             _currentPlayer++;
 
             if (_currentPlayer >= _partyCombatants.Count)
@@ -146,7 +168,7 @@ namespace JSM.RPG.Combat
 
         private void CreatePartyEntities()
         {
-            List<PartyMember> currentParty = PartyHandler.Instance.CurrentParty;
+            List<PartyMember> currentParty = PartyHandler.Instance.GetAliveParty();
             for (int i = 0; i < currentParty.Count; i++)
             {
                 CombatEntities newEntity = new CombatEntities();
@@ -160,18 +182,35 @@ namespace JSM.RPG.Combat
             }
         }
 
+        private void DetermineBattleOrder()
+        {
+            _allCombatants.Sort((bi1, bi2) => -bi1.Initiative.CompareTo(bi2.Initiative));
+        }
+
         private int GetRandomTarget(bool isTargetAPlayer)
         {
             List<int> targetIndexList = new List<int>();
             for (int i = 0; i < _allCombatants.Count; i++)
             {
-                if (_allCombatants[i].IsPlayer == isTargetAPlayer)
+                CombatEntities entity = _allCombatants[i];
+                if (entity.IsPlayer == isTargetAPlayer && entity.CurrentHP > 0)
                 {
                     targetIndexList.Add(i);
                 }
             }
             int randomIndex = Random.Range(0, targetIndexList.Count);
             return targetIndexList[randomIndex];
+        }
+
+        private void RemoveDeadCombatabts()
+        {
+            for (int i = 0; i < _allCombatants.Count; i++)
+            {
+                if (_allCombatants[i].CurrentHP <= 0)
+                {
+                    _allCombatants.RemoveAt(i);
+                }
+            }
         }
 
         private void SaveHealth()
@@ -193,15 +232,15 @@ namespace JSM.RPG.Combat
 
             for (int i = 0; i < _allCombatants.Count; i++)
             {
-                if (_state == CombatState.Battle)
+                if (_state == CombatState.Battle && _allCombatants[i].CurrentHP > 0)
                 {
                     switch (_allCombatants[i].CombatAction)
                     {
                         case CombatEntities.Action.Attack:
-                            yield return StartCoroutine(AttackRoutine(_allCombatants[i]));
+                            yield return StartCoroutine(AttackRoutine(i));
                             break;
                         case CombatEntities.Action.Run:
-                            Debug.Log($"{_allCombatants[i].EntityName} is running");
+                            yield return StartCoroutine(RunRoutine(_allCombatants[i]));
                             break;
                         default:
                             Debug.Log("No action found");
@@ -209,6 +248,8 @@ namespace JSM.RPG.Combat
                     }
                 }
             }
+
+            RemoveDeadCombatabts();
 
             if (_state == CombatState.Battle)
             {
@@ -220,16 +261,18 @@ namespace JSM.RPG.Combat
             yield return null;
         }
 
-        private IEnumerator AttackRoutine(CombatEntities currentAttacker)
+        private IEnumerator AttackRoutine(int index)
         {
-            if (currentAttacker.IsPlayer)
+            if (_allCombatants[index].IsPlayer)
             {
-                if (_allCombatants.Contains(currentAttacker) && _allCombatants[currentAttacker.Target].IsPlayer || currentAttacker.Target >= _allCombatants.Count)
+                CombatEntities currentAttacker = _allCombatants[index];
+                if (_allCombatants[currentAttacker.Target].CurrentHP <= 0)
                 {
                     currentAttacker.SetTarget(GetRandomTarget(false));
                 }
                 CombatEntities currentTarget = _allCombatants[currentAttacker.Target];
-                AttackAction(currentAttacker, currentTarget);
+
+                AttackAction(_allCombatants[index], currentTarget);
 
                 yield return new WaitForSeconds(TURN_DURATION);
 
@@ -237,7 +280,6 @@ namespace JSM.RPG.Combat
                 {
                     yield return new WaitForSeconds(TURN_DURATION);
 
-                    _allCombatants.Remove(currentTarget);
                     _enemyCombatants.Remove(currentTarget);
 
                     if (_enemyCombatants.Count <= 0)
@@ -249,8 +291,9 @@ namespace JSM.RPG.Combat
                 }
             }
 
-            if (!currentAttacker.IsPlayer)
+            if (index < _allCombatants.Count && !_allCombatants[index].IsPlayer)
             {
+                CombatEntities currentAttacker = _allCombatants[index];
                 currentAttacker.SetTarget(GetRandomTarget(true));
                 CombatEntities currentTarget = _allCombatants[currentAttacker.Target];
                 AttackAction(currentAttacker, currentTarget);
@@ -261,7 +304,6 @@ namespace JSM.RPG.Combat
                 {
                     yield return new WaitForSeconds(TURN_DURATION);
 
-                    _allCombatants.Remove(currentTarget);
                     _partyCombatants.Remove(currentTarget);
 
                     if (_partyCombatants.Count <= 0)
@@ -273,6 +315,50 @@ namespace JSM.RPG.Combat
             }
 
             yield return null;
+        }
+
+        private IEnumerator RunRoutine(CombatEntities combatant)
+        {
+            int runnersSpeed = 0;
+            int chasersSpeed = 0;
+
+            foreach (CombatEntities combatantEntity in _allCombatants)
+            {
+                if (combatantEntity.IsPlayer == combatant.IsPlayer)
+                {
+                    if (combatantEntity.Speed > runnersSpeed)
+                    {
+                        combatantEntity.Speed = runnersSpeed;
+                    }
+                }
+                else
+                {
+                    if (combatantEntity.Speed > chasersSpeed)
+                    {
+                        combatantEntity.Speed = chasersSpeed;
+                    }
+                }
+            }
+            runnersSpeed += DiceRoller.RollDice(1, 20);
+            chasersSpeed += DiceRoller.RollDice(1, 20);
+
+            if (_state == CombatState.Battle)
+            {
+                if (runnersSpeed > chasersSpeed)
+                {
+                    combatant.Visuals.DisplayDamage("ESCAPED");
+                    _state = CombatState.Run;
+                    _allCombatants.Clear();
+                    yield return new WaitForSeconds(TURN_DURATION);
+                    SceneManager.LoadScene(WORLD_SCENE);
+                    yield break;
+                }
+                else
+                {
+                    combatant.Visuals.DisplayDamage("CAUGHT");
+                    yield return new WaitForSeconds(TURN_DURATION);
+                }
+            }
         }
 
         #endregion

@@ -17,6 +17,7 @@ namespace JSM.RPG.Enemies
         public int DamageDieType;
         public int DamageBonus;
         public int XPValue;
+        public int Speed;
         public CombatVisuals Visuals;
 
         public Enemy(EnemyInfo enemy)
@@ -32,6 +33,7 @@ namespace JSM.RPG.Enemies
             DamageDieType = enemy.DamageDieType;
             DamageBonus = enemy.DamageBonus;
             XPValue = enemy.XPValue;
+            Speed = enemy.Speed;
             Visuals = enemy.Visuals;
         }
     }

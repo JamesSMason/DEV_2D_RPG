@@ -7,7 +7,7 @@ namespace JSM.RPG.Enemies
     {
         public static EnemyHandler Instance { get; private set; } = null;
 
-        [SerializeField] private EnemyInfo _defaultEnemy = null;
+        //[SerializeField] private EnemyInfo _defaultEnemy = null;
         [SerializeField] private EnemyInfo[] _allEnemies = null;
         [SerializeField] private List<Enemy> _currentEnemies = new List<Enemy>();
 

@@ -1076,8 +1076,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2512421e59bcd104494e9069fa095155, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _encounterTimer: 20
-  _chanceOfEncounter: 5
+  _encounterTimer: 5
+  _chanceOfEncounter: 20
 --- !u!1001 &1737448700
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1178,7 +1178,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c07e492784f6f4849930327d4dd39577, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _defaultEnemy: {fileID: 11400000, guid: 3e7e549edb363c84d9514c5e7ec250ea, type: 2}
   _allEnemies:
   - {fileID: 11400000, guid: 3e7e549edb363c84d9514c5e7ec250ea, type: 2}
   _currentEnemies: []

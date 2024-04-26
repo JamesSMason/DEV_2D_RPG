@@ -18,6 +18,7 @@ namespace JSM.RPG.Party
         public int NumberOfDamageDice;
         public int DamageDieType;
         public int DamageBonus;
+        public int Speed;
         public GameObject OverworldVisuals;
         public CombatVisuals CombatVisuals;
 
@@ -33,6 +34,7 @@ namespace JSM.RPG.Party
             NumberOfDamageDice = playerInfo.NumberOfDamageDice;
             DamageDieType = playerInfo.DamageDieType;
             DamageBonus = playerInfo.DamageBonus;
+            Speed = playerInfo.Speed;
             OverworldVisuals = playerInfo.OverworldVisuals;
             CombatVisuals = playerInfo.CombatVisuals;
         }

@@ -876,6 +876,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Run
       objectReference: {fileID: 0}
+    - target: {fileID: 7489155197361366785, guid: 6766285b9b71d4744bcfb75986df8111, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1953307458}
+    - target: {fileID: 7489155197361366785, guid: 6766285b9b71d4744bcfb75986df8111, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SelectRunAction
+      objectReference: {fileID: 0}
+    - target: {fileID: 7489155197361366785, guid: 6766285b9b71d4744bcfb75986df8111, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: JSM.RPG.Combat.CombatSystem, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 7489155197361366785, guid: 6766285b9b71d4744bcfb75986df8111, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 9112453625019076332, guid: 6766285b9b71d4744bcfb75986df8111, type: 3}
       propertyPath: m_text
       value: Run
@@ -3625,6 +3641,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23c06c511cc11ff4f858ab14afad7237, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _state: 0
   _partySpawnPoints:
   - {fileID: 986046922964132111}
   - {fileID: 986046922704612515}

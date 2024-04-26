@@ -8,9 +8,7 @@ namespace JSM.RPG.Combat
     {
         [SerializeField] private Animator _animator = null;
         [SerializeField] private TextMeshPro _damageText = null;
-        [SerializeField] private float _damageDisplayTime = 2.0f;
-
-        private const float DESTRUCTION_DELAY = 2.0f;
+        [SerializeField] private float _damageDisplayTime = 1.0f;
 
         private const string ATTACK_ANIMATION = "Attack 1";
         private const string HURT_ANIMATION = "Hurt";
