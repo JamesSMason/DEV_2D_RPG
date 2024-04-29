@@ -1,13 +1,12 @@
 using JSM.RPG.Player;
+using JSM.Utilities;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace JSM.RPG.Party
 {
-    public class PartyHandler : MonoBehaviour
+    public class PartyHandler : Singleton<PartyHandler>
     {
-        public static PartyHandler Instance { get; private set; } = null;
-
         [SerializeField] private PlayerInfo _defaultPartyMember = null;
         [SerializeField] private PlayerInfo[] _allMembers;
         [SerializeField] private List<PartyMember> _currentParty = new List<PartyMember>();
@@ -19,20 +18,13 @@ namespace JSM.RPG.Party
 
         #region Unity Messages
 
-        private void Awake()
+        protected override void Awake()
         {
-            if (Instance != null)
-            {
-                Destroy(this.gameObject);
-            }
-            else
-            {
-                Instance = this;
-                AddMemberToPartyByName(_defaultPartyMember.PlayerName);
-                AddMemberToPartyByName(_defaultPartyMember.PlayerName);
-                AddMemberToPartyByName(_defaultPartyMember.PlayerName);
-                DontDestroyOnLoad(gameObject);
-            }
+            base.Awake();
+            AddMemberToPartyByName(_defaultPartyMember.PlayerName);
+            AddMemberToPartyByName(_defaultPartyMember.PlayerName);
+            AddMemberToPartyByName(_defaultPartyMember.PlayerName);
+            DontDestroyOnLoad(gameObject);
         }
 
         #endregion

@@ -1,16 +1,16 @@
 using JSM.RPG.Enemies;
 using JSM.RPG.Party;
+using JSM.RPG.Scenes;
 using JSM.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 namespace JSM.RPG.Combat
 {
-    public class CombatSystem : MonoBehaviour
+    public class CombatSystem : Singleton<CombatSystem>
     {
         [Serializable]
         private enum CombatState
@@ -22,8 +22,6 @@ namespace JSM.RPG.Combat
             Lost,
             Run,
         }
-
-        public static CombatSystem Instance { get; private set; } = null;
 
         public static Action<CombatEntities> OnPlayerSelectionChanged;
         public static Action OnShowMenu;
@@ -43,7 +41,6 @@ namespace JSM.RPG.Combat
         private int _currentPlayer = 0;
 
         private const float TURN_DURATION = 2.0f;
-        private const string WORLD_SCENE = "WorldScene";
 
         public int EnemyCount => _enemyCombatants.Count;
         public string EnemyName(int i) => _enemyCombatants[i].EntityName;
@@ -51,16 +48,9 @@ namespace JSM.RPG.Combat
 
         #region Unity Messages
 
-        private void Awake()
+        protected override void Awake()
         {
-            if (Instance == null)
-            {
-                Instance = this;
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
+            base.Awake();
         }
 
         private void Start()
@@ -286,7 +276,7 @@ namespace JSM.RPG.Combat
                     {
                         _state = CombatState.Won;
                         yield return new WaitForSeconds(TURN_DURATION);
-                        SceneManager.LoadScene(WORLD_SCENE);
+                        SceneHandler.Instance.LoadScene();
                     }
                 }
             }
@@ -350,7 +340,7 @@ namespace JSM.RPG.Combat
                     _state = CombatState.Run;
                     _allCombatants.Clear();
                     yield return new WaitForSeconds(TURN_DURATION);
-                    SceneManager.LoadScene(WORLD_SCENE);
+                    SceneHandler.Instance.LoadScene();
                     yield break;
                 }
                 else

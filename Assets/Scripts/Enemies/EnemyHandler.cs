@@ -1,12 +1,11 @@
+using JSM.Utilities;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace JSM.RPG.Enemies
 {
-    public class EnemyHandler : MonoBehaviour
+    public class EnemyHandler : Singleton<EnemyHandler>
     {
-        public static EnemyHandler Instance { get; private set; } = null;
-
         //[SerializeField] private EnemyInfo _defaultEnemy = null;
         [SerializeField] private EnemyInfo[] _allEnemies = null;
         [SerializeField] private List<Enemy> _currentEnemies = new List<Enemy>();
@@ -15,17 +14,10 @@ namespace JSM.RPG.Enemies
 
         #region Unity Messages
 
-        private void Awake()
+        protected override void Awake()
         {
-            if (Instance != null)
-            {
-                Destroy(this.gameObject);
-            }
-            else
-            {
-                Instance = this;
-                DontDestroyOnLoad(gameObject);
-            }
+            base.Awake();
+            DontDestroyOnLoad(gameObject);
         }
 
         #endregion

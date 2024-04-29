@@ -1,12 +1,12 @@
 using CustomizableCharacters;
 using JSM.RPG.Environment;
 using JSM.RPG.Party;
-using Unity.VisualScripting;
+using JSM.Utilities;
 using UnityEngine;
 
 namespace JSM.RPG.Controls
 {
-    public class PlayerController : MonoBehaviour
+    public class PlayerController : Singleton<PlayerController>
     {
         [SerializeField] private float _moveSpeed = 4.0f;
 
@@ -26,8 +26,9 @@ namespace JSM.RPG.Controls
 
         #region Unity Messages
 
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             _playerControls = new PlayerControls();
             _rb = GetComponent<Rigidbody2D>();
         }
@@ -42,7 +43,8 @@ namespace JSM.RPG.Controls
         {
             if (PartyHandler.Instance.PlayerPosition != Vector3.zero)
             {
-                transform.position = PartyHandler.Instance.PlayerPosition;
+                SetPosition(PartyHandler.Instance.PlayerPosition);
+                PartyHandler.Instance.SetPosition(Vector3.zero);
             }
 
             ResetRigs();
@@ -63,6 +65,15 @@ namespace JSM.RPG.Controls
         {
             _playerControls.Disable();
             RandomCombatGenerator.OnCombatStart -= RandomCombatGenerator_OnCombatStart;
+        }
+
+        #endregion
+
+        #region Public
+
+        public void SetPosition(Vector3 position)
+        {
+            transform.position = position;
         }
 
         #endregion
